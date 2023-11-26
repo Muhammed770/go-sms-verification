@@ -8,7 +8,7 @@ import (
 
 	"github.com/Muhammed770/go-sms-verification/data"
 	"github.com/gin-gonic/gin"
-	"github.com/muhammed770/go-sms-verification/data"
+
 )
 
 func (app *Config) sendSMS() gin.HandlerFunc {
@@ -20,11 +20,12 @@ func (app *Config) sendSMS() gin.HandlerFunc {
 
 		app.validateBody(c,&payload)
 
-		newData := data.OTPData{
-			PhoneNumber: payload.PhoneNumber,
+		newData := data.verifyData{
+			User: payload.User,
+			Code: payload.Code,
 		}
 
-		_, err := app.twilioSendOTP(newData.PhoneNumber)
+		err := app.twilioVerifyOTP(newData.User,newData.Code)
 		if err != nil {
 			app.errorJSON(c, err)
 			return
@@ -34,4 +35,28 @@ func (app *Config) sendSMS() gin.HandlerFunc {
 	}
 }
 
-func (app *Config) verifySMS() gin.HandlerFunc {}
+func (app *Config) verifySMS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		appTimeout := time.Duration(5) * time.Second
+		_, cancel := context.WithTimeout(context.Background(),appTimeout)
+		var payload data.verifyData
+		defer cancel()
+
+		app.validateBody(c,&payload)
+
+		newData := data.verifyData{
+			User: &data.OTPData{
+				PhoneNumber: payload.User.PhoneNumber,
+			},
+			Code: payload.Code,
+		}
+
+		_, err := app.twilioVerifyOTP(newData.User.PhoneNumber, newData.Code)
+		if err != nil {
+			app.errorJSON(c, err)
+			return
+		}
+
+		app.writeJSON(c, http.statusAccepted, "OTP verified successfully")
+	}
+}
