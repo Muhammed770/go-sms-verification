@@ -23,3 +23,11 @@ func (app *Config) validateBody(c *gin.Context, data any) error {
 	}
 	return nil
 }
+
+func (app *Config) writeJSON(c *gin.Context, status int, data any ) {
+	c.JSON(status, jsonResponse{
+		status,
+		Message: http.StatusText(status),
+		Data: data,
+	})
+}
