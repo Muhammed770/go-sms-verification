@@ -11,3 +11,15 @@ type jsonResponse struct {
 	Message string `json:"message"`
 	Data any `json:"data"`
 }
+
+var validate = validator.New()
+
+func (app *Config) validateBody(c *gin.Context, data any) error {
+	if err := c.BindJSON(data); err != nil {
+		return err
+	}
+	if err := validate.Struct(data); err != nil {
+		return err
+	}
+	return nil
+}
