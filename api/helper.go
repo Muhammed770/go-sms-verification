@@ -32,4 +32,4 @@ func (app *Config) writeJSON(c *gin.Context, status int, data any ) {
 	})
 }
 
-// Path: api/user.g
+// Path: api/
