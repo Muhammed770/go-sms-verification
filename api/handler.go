@@ -6,8 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/akhilsharma90/go-twilio-verify/data"
-
+	"github.com/Muhammed770/go-sms-verification/data"
 	"github.com/gin-gonic/gin"
 )
 

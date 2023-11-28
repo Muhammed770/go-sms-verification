@@ -1,10 +1,10 @@
 package data
 
 type OTPData struct {
-	PhoneNumber string `json:"phoneNumber,omitempty" validate:"required"`
+	PhoneNumber string `json:"PhoneNumber,omitempty" validate:"required"`
 }
 
-type verifyData struct {
+type VerifyData struct {
 	User *OTPData `json:"user,omitempty" validate:"required"`
 	Code string  `json:"code,omitempty" validate:"required"`
 }
