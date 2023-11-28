@@ -31,3 +31,5 @@ func (app *Config) writeJSON(c *gin.Context, status int, data any ) {
 		Data: data,
 	})
 }
+
+// Path: api/user.go
