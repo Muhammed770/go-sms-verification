@@ -6,57 +6,55 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Muhammed770/go-sms-verification/data"
-	"github.com/gin-gonic/gin"
+	"github.com/akhilsharma90/go-twilio-verify/data"
 
+	"github.com/gin-gonic/gin"
 )
+
+const appTimeout = time.Second * 10
 
 func (app *Config) sendSMS() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		appTimeout := time.Duration(5) * time.Second
-		_, cancel := context.WithTimeout(context.Background(),appTimeout)
+		_, cancel := context.WithTimeout(context.Background(), appTimeout)
 		var payload data.OTPData
 		defer cancel()
 
-		app.validateBody(c,&payload)
+		app.validateBody(c, &payload)
 
-		newData := data.verifyData{
-			User: payload.User,
-			Code: payload.Code,
+		newData := data.OTPData{
+			PhoneNumber: payload.PhoneNumber,
 		}
 
-		err := app.twilioVerifyOTP(newData.User,newData.Code)
+		_, err := app.twilioSendOTP(newData.PhoneNumber)
 		if err != nil {
 			app.errorJSON(c, err)
 			return
 		}
 
-		app.writeJSON(c, http.statusAccepted, "OTP sent successfully")
+		app.writeJSON(c, http.StatusAccepted, "OTP sent successfully")
 	}
 }
 
 func (app *Config) verifySMS() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		appTimeout := time.Duration(5) * time.Second
-		_, cancel := context.WithTimeout(context.Background(),appTimeout)
-		var payload data.verifyData
+		_, cancel := context.WithTimeout(context.Background(), appTimeout)
+		var payload data.VerifyData
 		defer cancel()
 
-		app.validateBody(c,&payload)
+		app.validateBody(c, &payload)
 
-		newData := data.verifyData{
-			User: &data.OTPData{
-				PhoneNumber: payload.User.PhoneNumber,
-			},
+		newData := data.VerifyData{
+			User: payload.User,
 			Code: payload.Code,
 		}
 
-		_, err := app.twilioVerifyOTP(newData.User.PhoneNumber, newData.Code)
+		err := app.twilioVerifyOTP(newData.User.PhoneNumber, newData.Code)
+		fmt.Println("err: ", err)
 		if err != nil {
 			app.errorJSON(c, err)
 			return
 		}
 
-		app.writeJSON(c, http.statusAccepted, "OTP verified successfully")
+		app.writeJSON(c, http.StatusAccepted, "OTP verified successfully")
 	}
 }
