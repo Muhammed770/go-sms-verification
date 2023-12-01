@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
 	"github.com/Muhammed770/go-sms-verification/data"
 	"github.com/gin-gonic/gin"
 )
@@ -53,7 +52,7 @@ func (app *Config) verifySMS() gin.HandlerFunc {
 			app.errorJSON(c, err)
 			return
 		}
-
+//		fmt.Println("newData.User.PhoneNumber: ", newData.User.PhoneNumber)
 		app.writeJSON(c, http.StatusAccepted, "OTP verified successfully")
 	}
 }
