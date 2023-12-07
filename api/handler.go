@@ -52,6 +52,7 @@ func (app *Config) verifySMS() gin.HandlerFunc {
 			app.errorJSON(c, err)
 			return
 		}
+		//
 //		fmt.Println("newData.User.PhoneNumber: ", newData.User.PhoneNumber)
 		app.writeJSON(c, http.StatusAccepted, "OTP verified successfully")
 	}

@@ -32,3 +32,10 @@ func envSERVICESID() string {
 	}
 	return os.Getenv("TWILIO_SERVICES_ID")
 }
+
+
+// func envACCOUNTSID() string {
+// 	err := godotenv.Load()
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
